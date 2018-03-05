@@ -1,0 +1,12 @@
+---
+- name: Install MariaDB, PHP-FPM
+  hosts: all
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+    - mariadb
+    - php
+    - php-fpm
+    - apache-php
+    - wordpress

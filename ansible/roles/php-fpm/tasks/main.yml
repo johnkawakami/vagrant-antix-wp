@@ -1,0 +1,6 @@
+---
+- name: Install php-fpm
+  apt: name={{ item }} state=present
+  with_items:
+    - php-fpm
+

@@ -1,0 +1,27 @@
+---
+- name: Install WP-CLI
+  get_url:
+    dest: /usr/local/bin/wp
+    mode: a+rx
+    validate_certs: no
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+- name: Create HTML directory
+  file:
+      dest: /var/www/html
+      owner: vagrant
+      group: vagrant
+      recurse: yes
+
+- name: Install WordPress
+  become: true
+  become_user: vagrant
+  become_method: sudo
+  command: wp core download
+  args:
+    chdir: /var/www/html/
+    creates: /var/www/html/wp-config-sample.php
+
+- name: delete /var/www/html/index.html
+  file: path=/var/www/html/index.html state=absent
+

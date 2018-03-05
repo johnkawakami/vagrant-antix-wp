@@ -1,0 +1,9 @@
+---
+- name: Install MariaDB
+  apt: name={{ item }} state=present
+  with_items:
+    - mariadb-server
+    - mariadb-client
+
+- name: Start MariaDB Service
+  service: name=mysql state=started enabled=yes
