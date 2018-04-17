@@ -7,3 +7,14 @@
 
 - name: Start MariaDB Service
   service: name=mysql state=started enabled=yes
+
+- name: Install MySQL-python module
+  apt: name=python-mysqldb state=present
+
+- name: Create the MariaDB User vagrant
+  mysql_user:
+    name: vagrant
+    password: vagrant
+    priv: '*.*:ALL,GRANT'
+    state: present
+

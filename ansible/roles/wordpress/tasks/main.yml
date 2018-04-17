@@ -1,3 +1,4 @@
+# // vim:ts=2:sw=2:ai:et
 ---
 - name: Install WP-CLI
   get_url:
@@ -13,7 +14,7 @@
       group: vagrant
       recurse: yes
 
-- name: Install WordPress
+- name: Download WordPress
   become: true
   become_user: vagrant
   become_method: sudo
@@ -24,4 +25,38 @@
 
 - name: delete /var/www/html/index.html
   file: path=/var/www/html/index.html state=absent
+
+- name: Create Database on MariaDB
+  mysql_db:
+    name: wp
+    state: present
+
+- name: Create the MariaDB User wp
+  mysql_user:
+    name: wp
+    password: wp
+    priv: 'wp.*:ALL'
+    state: present
+
+- name: Install Nullmailer
+  apt:
+    name: nullmailer
+    state: present
+
+- name: Configure WordPress
+  become: true
+  become_user: vagrant
+  become_method: sudo
+  command: 'wp config create --path=/var/www/html --url=http://localhost:4567 --dbname=wp --dbuser=wp --dbpass=wp'
+  args:
+    chdir: /var/www/html/
+    creates: /var/www/html/wp-config.php
+
+- name: Install WordPress
+  become: true
+  become_user: vagrant
+  become_method: sudo
+  command: 'wp core install --path=/var/www/html --url=http://localhost:4567 --title=NoName --admin_user=admin --admin_email=example@example.com --admin_password=admin'
+  args:
+    chdir: /var/www/html/
 
