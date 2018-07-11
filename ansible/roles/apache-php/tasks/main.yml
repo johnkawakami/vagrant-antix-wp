@@ -8,22 +8,15 @@
     - apache2
     - libapache2-mod-php
 
-- name: Disable Apache2 Modules
-  apache2_module: name={{ item }} state=absent force=true
-  with_items:
-    - mpm_event
-    - mpm_worker
-
-- name: Enable Apache2 mpm_prefork
-  apache2_module: name={{ item }} state=present force=true
-  with_items:
-    - mpm_prefork
+- name : Disable Apache2 Modules
+  apache2_module: name=mpm_event state=absent
 
 - name: Enable Apache2 Modules
   apache2_module: name={{ item }} state=present 
   with_items:
+    - mpm_prefork
     - php7.0
     - rewrite
 
 - name: Check that Apache is Running
-  service: name=apache2 state=running
+  service: name=apache2 state=started
